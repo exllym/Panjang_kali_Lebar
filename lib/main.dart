@@ -1,41 +1,92 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Application name
-      title: 'Flutter Hello World',
-      // Application theme data, you can set the colors for the application as
-      // you want
-      theme: ThemeData(
-        // useMaterial3: false,
-        primarySwatch: Colors.blue,
-      ),
-      // A widget which will be started on application startup
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      home: const HalamanHitung(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-  const MyHomePage({super.key, required this.title});  
+class HalamanHitung extends StatefulWidget {
+  const HalamanHitung({super.key});
+
+  @override
+  State<HalamanHitung> createState() => _HalamanHitungState();
+}
+
+class _HalamanHitungState extends State<HalamanHitung> {
+  final TextEditingController panjangController = TextEditingController();
+
+  final TextEditingController lebarController = TextEditingController();
+
+  double hasil = 0;
+
+  void hitungLuas() {
+    double panjang = double.tryParse(panjangController.text) ?? 0;
+
+    double lebar = double.tryParse(lebarController.text) ?? 0;
+
+    setState(() {
+      hasil = panjang * lebar;
+    });
+  }
+
+  @override
+  void dispose() {
+    panjangController.dispose();
+    lebarController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // The title text which will be shown on the action bar
-        title: Text(title),
+        title: const Text('Hitung Luas'),
       ),
-      body: Center(
-        child: Text(
-          'Hello, World!',
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: panjangController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Masukkan Panjang',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: lebarController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Masukkan Lebar',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: hitungLuas,
+              child: const Text('Hitung'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Hasil: $hasil',
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
       ),
     );
